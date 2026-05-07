@@ -1,0 +1,30 @@
+﻿name: SCA - Software Composition Analysis
+
+on:
+  push:
+    branches: ["main", "master", "fancier-score-board"]
+  pull_request:
+    branches: ["main", "master", "fancier-score-board"]
+  schedule:
+    - cron: "0 6 * * 1"
+
+jobs:
+  sca-scan:
+    name: Trivy SCA Scan
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run Trivy vulnerability scanner (SCA)
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: "fs"
+          scan-ref: "."
+          scanners: "vuln"
+          vuln-type: "library"
+          severity: "HIGH,CRITICAL"
+          exit-code: "1"
+          format: "table"
+          ignore-unfixed: true
