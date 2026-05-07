@@ -2,9 +2,9 @@ name: Security Scans
 
 on:
   push:
-    branches: [ main ]
+    branches: [ fancier-score-board ]
   pull_request:
-    branches: [ main ]
+    branches: [ fancier-score-board ]
   schedule:
     - cron: '0 2 * * 1'
 
