@@ -1,25 +1,30 @@
-name: Security Checks
+name: SCA - Software Composition Analysis
 
 on:
   push:
-    branches: ["**"]
+    branches: ["main", "master"]
   pull_request:
-    branches: ["**"]
+    branches: ["main", "master"]
   schedule:
-    - cron: "0 2 * * *"  # Elke nacht om 02:00 UTC
+    - cron: "0 6 * * 1"  # Elke maandag om 06:00 UTC
 
 jobs:
-  secret-scanning:
-    name: Secret Scanning (Gitleaks)
+  sca-scan:
+    name: Trivy SCA Scan
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  # Volledige history ophalen
 
-      - name: Run Gitleaks
-        uses: gitleaks/gitleaks-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Run Trivy vulnerability scanner (SCA)
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: "fs"
+          scan-ref: "."
+          scanners: "vuln"
+          vuln-type: "library"
+          severity: "HIGH,CRITICAL"
+          exit-code: "1"        # Pipeline blokkeert bij vulnerabilities
+          format: "table"
+          ignore-unfixed: true
