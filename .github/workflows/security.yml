@@ -6,7 +6,7 @@ on:
   pull_request:
     branches: ["**"]
   schedule:
-    - cron: "0 3 * * *"  # dagelijks om 03:00 UTC
+    - cron: "0 3 * * *"
 
 jobs:
   secret-scan:
@@ -16,9 +16,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # volledige history nodig voor Gitleaks
+          fetch-depth: 0
+
+      - name: Install Gitleaks
+        run: |
+          wget https://github.com/gitleaks/gitleaks/releases/download/v8.18.4/gitleaks_8.18.4_linux_x64.tar.gz
+          tar -xzf geleaks_8.18.4_linux_x64.tar.gz
+          sudo mv gitleaks /usr/local/bin/
 
       - name: Run Gitleaks
-        uses: gitleaks/gitleaks-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gitleaks detect --source . --log-opts="HEAD~1..HEAD" --verbose --exit-code 1
