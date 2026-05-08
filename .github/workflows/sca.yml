@@ -1,4 +1,4 @@
-﻿name: SCA - Software Composition Analysis
+name: SCA - Software Composition Analysis
 
 on:
   push:
