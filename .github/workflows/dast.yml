@@ -12,6 +12,9 @@ jobs:
   zap-scan:
     name: ZAP DAST Scan
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -28,6 +31,9 @@ jobs:
         run: |
           npm start &
           sleep 45
+
+      - name: Login to GHCR
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
       - name: ZAP Baseline Scan
         uses: zaproxy/action-baseline@v0.14.0
