@@ -27,10 +27,13 @@ jobs:
       - name: Install dependencies
         run: npm install --ignore-scripts
 
+      - name: Build Juice Shop
+        run: npm run build
+
       - name: Start Juice Shop
         run: |
           npm start &
-          sleep 45
+          sleep 60
 
       - name: Login to GHCR
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
