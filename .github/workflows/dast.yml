@@ -19,13 +19,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Login to GHCR
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-
       - name: Start Juice Shop
         run: |
-          docker pull ghcr.io/juice-shop/juice-shop:latest
-          docker run -d -p 3000:3000 ghcr.io/juice-shop/juice-shop:latest
+          docker pull bkimminich/juice-shop:latest
+          docker run -d -p 3000:3000 bkimminich/juice-shop:latest
           sleep 30
 
       - name: ZAP Baseline Scan
